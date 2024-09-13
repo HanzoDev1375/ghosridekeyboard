@@ -22,7 +22,7 @@
     <include latin:keyboardLayout="@xml/key_styles_common" />
 
     <Row
-        latin:keyWidth="9.091%p"
+        latin:keyWidth="10.091%p"
         latin:keyLabelFlags="fontNormal"
     >
         <include latin:keyboardLayout="@xml/rowkeys_farsi1" />

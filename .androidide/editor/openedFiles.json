@@ -1,0 +1,20 @@
+{
+  "allFiles": [
+    {
+      "file": "/storage/emulated/0/AndroidIDEProjects/Ghost ide Keyboard/app/src/main/res/xml/rowkeys_farsi1.xml",
+      "selection": {
+        "end": {
+          "column": 8,
+          "index": 925,
+          "line": 9
+        },
+        "start": {
+          "column": 8,
+          "index": 925,
+          "line": 9
+        }
+      }
+    }
+  ],
+  "selectedFile": "/storage/emulated/0/AndroidIDEProjects/Ghost ide Keyboard/app/src/main/res/xml/rowkeys_farsi1.xml"
+}
