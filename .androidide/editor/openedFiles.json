@@ -1,20 +1,35 @@
 {
   "allFiles": [
     {
-      "file": "/storage/emulated/0/AndroidIDEProjects/Ghost ide Keyboard/app/src/main/res/xml/rowkeys_farsi1.xml",
+      "file": "/storage/emulated/0/AndroidIDEProjects/Ghost ide Keyboard/.gitignore",
       "selection": {
         "end": {
-          "column": 8,
-          "index": 925,
-          "line": 9
+          "column": 11,
+          "index": 674,
+          "line": 44
         },
         "start": {
-          "column": 8,
-          "index": 925,
-          "line": 9
+          "column": 11,
+          "index": 674,
+          "line": 44
+        }
+      }
+    },
+    {
+      "file": "/storage/emulated/0/AndroidIDEProjects/Ghost ide Keyboard/.github/workflows/runer.yml",
+      "selection": {
+        "end": {
+          "column": 57,
+          "index": 625,
+          "line": 30
+        },
+        "start": {
+          "column": 57,
+          "index": 625,
+          "line": 30
         }
       }
     }
   ],
-  "selectedFile": "/storage/emulated/0/AndroidIDEProjects/Ghost ide Keyboard/app/src/main/res/xml/rowkeys_farsi1.xml"
+  "selectedFile": "/storage/emulated/0/AndroidIDEProjects/Ghost ide Keyboard/.gitignore"
 }
