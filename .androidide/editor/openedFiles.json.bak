@@ -1,0 +1,20 @@
+{
+  "allFiles": [
+    {
+      "file": "/storage/emulated/0/AndroidIDEProjects/Ghost ide Keyboard/build.gradle",
+      "selection": {
+        "end": {
+          "column": 43,
+          "index": 214,
+          "line": 3
+        },
+        "start": {
+          "column": 43,
+          "index": 214,
+          "line": 3
+        }
+      }
+    }
+  ],
+  "selectedFile": "/storage/emulated/0/AndroidIDEProjects/Ghost ide Keyboard/build.gradle"
+}
