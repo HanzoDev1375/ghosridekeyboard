@@ -3,18 +3,24 @@
 
 <merge xmlns:latin="http://schemas.android.com/apk/res-auto">
     <!-- U+0638: "ظ" ARABIC LETTER ZAH -->
-    <Key latin:keySpec="ظ"
-    />
+
     <!-- U+0637: "ط" ARABIC LETTER TAH -->
-    <Key latin:keySpec="ط" />
-    <!-- U+0698: "ژ" ARABIC LETTER JEH -->
-    <Key latin:keySpec="ز" />
-    <!-- U+0632: "ز" ARABIC LETTER ZAIN -->
     <Key
-        latin:keySpec="ر"
+        latin:keySpec="ط"
+        latin:keyHintLabel="ظ"
+        latin:additionalMoreKeys="ظ"
+        
+    />
+    <!-- U+0698: "ژ" ARABIC LETTER JEH -->
+    <Key
+        latin:keySpec="ز"
         latin:keyHintLabel="ژ"
         latin:additionalMoreKeys="ژ"
         
+    />
+    <!-- U+0632: "ز" ARABIC LETTER ZAIN -->
+    <Key
+        latin:keySpec="ر"
     />
     <!-- U+0631: "ر" ARABIC LETTER REH -->
     <Key
