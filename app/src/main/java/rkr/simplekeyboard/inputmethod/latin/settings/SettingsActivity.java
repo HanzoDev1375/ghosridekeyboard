@@ -22,6 +22,7 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceActivity;
 import android.util.Log;
@@ -29,98 +30,84 @@ import android.view.MenuItem;
 import android.view.inputmethod.InputMethodInfo;
 import android.view.inputmethod.InputMethodManager;
 
+import com.google.android.material.color.MaterialColors;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import rkr.simplekeyboard.inputmethod.R;
 import rkr.simplekeyboard.inputmethod.latin.utils.FragmentUtils;
 
-
 @SuppressLint("deprecated")
 public class SettingsActivity extends PreferenceActivity {
-    private static final String DEFAULT_FRAGMENT = SettingsFragment.class.getName();
-    private static final String TAG = SettingsActivity.class.getSimpleName();
+  private static final String DEFAULT_FRAGMENT = SettingsFragment.class.getName();
+  private static final String TAG = SettingsActivity.class.getSimpleName();
 
-    @Override
-    protected void onStart() {
-        super.onStart();
+  @Override
+  protected void onStart() {
+    super.onStart();
 
-        boolean enabled = false;
-        try {
-            enabled = isInputMethodOfThisImeEnabled();
-        } catch (Exception e) {
-            Log.e(TAG, "Exception in check if input method is enabled", e);
-        }
+    boolean enabled = false;
+    try {
+      enabled = isInputMethodOfThisImeEnabled();
+    } catch (Exception e) {
+      Log.e(TAG, "Exception in check if input method is enabled", e);
+    }
+  }
 
-        if (!enabled) {
-            final Context context = this;
-            MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(this);
-            builder.setMessage(R.string.setup_message);
-            builder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
-                public void onClick(DialogInterface dialog, int id) {
-                    Intent intent = new Intent(android.provider.Settings.ACTION_INPUT_METHOD_SETTINGS);
-                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                    context.startActivity(intent);
-                    dialog.dismiss();
-                }
-            });
-            builder.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
-                public void onClick(DialogInterface dialog, int id) {
-                    finish();
-                }
-            });
-            builder.setCancelable(false);
+  /**
+   * Check if this IME is enabled in the system.
+   *
+   * @return whether this IME is enabled in the system.
+   */
+  private boolean isInputMethodOfThisImeEnabled() {
+    final InputMethodManager imm =
+        (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+    final String imePackageName = getPackageName();
+    for (final InputMethodInfo imi : imm.getEnabledInputMethodList()) {
+      if (imi.getPackageName().equals(imePackageName)) {
+        return true;
+      }
+    }
+    return false;
+  }
 
-            builder.create().show();
-        }
+  @Override
+  protected void onCreate(final Bundle savedState) {
+    super.onCreate(savedState);
+    final ActionBar actionBar = getActionBar();
+    if (actionBar != null) {
+      actionBar.setDisplayHomeAsUpEnabled(true);
+      actionBar.setHomeButtonEnabled(true);
     }
 
-    /**
-     * Check if this IME is enabled in the system.
-     * @return whether this IME is enabled in the system.
-     */
-    private boolean isInputMethodOfThisImeEnabled() {
-        final InputMethodManager imm =
-                (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-        final String imePackageName = getPackageName();
-        for (final InputMethodInfo imi : imm.getEnabledInputMethodList()) {
-            if (imi.getPackageName().equals(imePackageName)) {
-                return true;
-            }
-        }
-        return false;
-    }
+    getWindow()
+        .setStatusBarColor(
+            MaterialColors.getColor(this, com.google.android.material.R.attr.colorSurface, 0));
+    getWindow()
+        .setNavigationBarColor(
+            MaterialColors.getColor(this, com.google.android.material.R.attr.colorSurface, 0));
+  }
 
-    @Override
-    protected void onCreate(final Bundle savedState) {
-        super.onCreate(savedState);
-        final ActionBar actionBar = getActionBar();
-        if (actionBar != null) {
-            actionBar.setDisplayHomeAsUpEnabled(true);
-            actionBar.setHomeButtonEnabled(true);
-        }
+  @Override
+  public boolean onOptionsItemSelected(final MenuItem item) {
+    if (item.getItemId() == android.R.id.home) {
+      super.onBackPressed();
+      return true;
     }
+    return super.onOptionsItemSelected(item);
+  }
 
-    @Override
-    public boolean onOptionsItemSelected(final MenuItem item) {
-        if (item.getItemId() == android.R.id.home) {
-            super.onBackPressed();
-            return true;
-        }
-        return super.onOptionsItemSelected(item);
+  @Override
+  public Intent getIntent() {
+    final Intent intent = super.getIntent();
+    final String fragment = intent.getStringExtra(EXTRA_SHOW_FRAGMENT);
+    if (fragment == null) {
+      intent.putExtra(EXTRA_SHOW_FRAGMENT, DEFAULT_FRAGMENT);
     }
+    intent.putExtra(EXTRA_NO_HEADERS, true);
+    return intent;
+  }
 
-    @Override
-    public Intent getIntent() {
-        final Intent intent = super.getIntent();
-        final String fragment = intent.getStringExtra(EXTRA_SHOW_FRAGMENT);
-        if (fragment == null) {
-            intent.putExtra(EXTRA_SHOW_FRAGMENT, DEFAULT_FRAGMENT);
-        }
-        intent.putExtra(EXTRA_NO_HEADERS, true);
-        return intent;
-    }
-
-    @Override
-    public boolean isValidFragment(final String fragmentName) {
-        return FragmentUtils.isValidFragment(fragmentName);
-    }
+  @Override
+  public boolean isValidFragment(final String fragmentName) {
+    return FragmentUtils.isValidFragment(fragmentName);
+  }
 }

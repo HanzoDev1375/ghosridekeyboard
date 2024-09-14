@@ -10,7 +10,10 @@
         android:fullBackupOnly="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/english_ime_name"
-        >
+        android:theme="@style/AppTheme"
+        android:name=".AppLoader"
+        
+    >
 
         <service
             android:name=".latin.LatinIME"
@@ -18,7 +21,8 @@
             android:directBootAware="true"
             android:exported="false"
             android:permission="android.permission.BIND_INPUT_METHOD"
-            >
+            
+        >
             <intent-filter>
                 <action android:name="android.view.InputMethod" />
             </intent-filter>
@@ -26,15 +30,16 @@
             <meta-data
                 android:name="android.view.im"
                 android:resource="@xml/method"
-                />
+                
+            />
         </service>
 
         <activity
             android:name=".latin.settings.SettingsActivity"
             android:label="@string/english_ime_name"
             android:exported="true"
-            android:theme="@style/platformSettingsTheme"
-            >
+            
+        >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
@@ -44,7 +49,8 @@
         <receiver
             android:name=".latin.SystemBroadcastReceiver"
             android:exported="false"
-            >
+            
+        >
             <intent-filter>
                 <action android:name="android.intent.action.LOCALE_CHANGED" />
             </intent-filter>

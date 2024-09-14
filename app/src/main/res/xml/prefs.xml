@@ -6,12 +6,21 @@
     android:key="english_ime_settings"
     
 >
+
+    <Preference
+        android:key="keyboardset"
+        android:title="Keyboard selection"
+        
+    />
+
     <PreferenceScreen
         android:fragment="rkr.simplekeyboard.inputmethod.latin.settings.PreferencesSettingsFragment"
         android:title="@string/settings_screen_preferences"
         android:key="screen_preferences"
         
     />
+
+
     <PreferenceScreen
         android:fragment="rkr.simplekeyboard.inputmethod.latin.settings.KeyPressSettingsFragment"
         android:title="@string/settings_screen_key_press"
@@ -24,6 +33,7 @@
         android:key="screen_appearance"
         
     />
+
     <Preference
         android:title="ghost ide Repo">
         <intent
@@ -41,6 +51,7 @@
     <Preference
         android:title="Open Ghost ide"
         android:key="open_ghost_ide"
-        />
+        
+    />
 
 </PreferenceScreen>

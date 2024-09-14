@@ -16,13 +16,17 @@
 
 package rkr.simplekeyboard.inputmethod.latin.settings;
 
+import android.app.AlertDialog;
 import android.content.Intent;
 import android.content.ComponentName;
 import android.os.Bundle;
 import android.preference.Preference;
+import android.provider.Settings;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Toast;
 import android.preference.PreferenceScreen;
 
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import rkr.simplekeyboard.inputmethod.R;
 import rkr.simplekeyboard.inputmethod.latin.utils.ApplicationUtils;
 
@@ -38,10 +42,19 @@ public final class SettingsFragment extends InputMethodSettingsFragment {
     preferenceScreen.setTitle(
         ApplicationUtils.getActivityTitleResId(getActivity(), SettingsActivity.class));
 
-    Preference openApp = findPreference("open_ghost_ide");
+    var openApp = findPreference("open_ghost_ide");
+    var keyboardinstall = findPreference("keyboardset");
+    if (keyboardinstall == null) {
+      return;
+    }
     if (openApp == null) {
       return;
     }
+    keyboardinstall.setOnPreferenceClickListener(
+        __ -> {
+          keyboardSet();
+         return true;
+        });
     openApp.setOnPreferenceClickListener(
         it -> {
           Intent intent = new Intent();
@@ -58,5 +71,25 @@ public final class SettingsFragment extends InputMethodSettingsFragment {
 
           return true;
         });
+  }
+
+  void keyboardSet() {
+    var dialog = new AlertDialog.Builder(getActivity(),AlertDialog.THEME_DEVICE_DEFAULT_DARK);
+    dialog.setTitle("Keyboard install");
+    dialog.setMessage("You can install the keyboard");
+    dialog.setPositiveButton(
+        "install settings",
+        (__, ___) -> {
+          Intent i = new Intent(Settings.ACTION_INPUT_METHOD_SETTINGS);
+          startActivity(i);
+        });
+    dialog.setNegativeButton(
+        "change",
+        (__, ___) -> {
+          InputMethodManager i =
+              (InputMethodManager) getActivity().getSystemService("input_method");
+          i.showInputMethodPicker();
+        });
+    dialog.show();
   }
 }

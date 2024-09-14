@@ -613,8 +613,8 @@ public class RichInputMethodManager {
                 }
             }
         };
-        final AlertDialog.Builder builder = new AlertDialog.Builder(
-                DialogUtils.getPlatformDialogThemeContext(context));
+        final AlertDialog.Builder builder = new AlertDialog.Builder(context);
+//                DialogUtils.getPlatformDialogThemeContext(context));
         builder.setSingleChoiceItems(items, currentSubtypeIndex, listener).setTitle(title);
         final AlertDialog dialog = builder.create();
         dialog.setCancelable(true);
