@@ -76,6 +76,7 @@ public class SettingsActivity extends PreferenceActivity {
     if (actionBar != null) {
       actionBar.setDisplayHomeAsUpEnabled(true);
       actionBar.setHomeButtonEnabled(true);
+      actionBar.setSubtitle("Fast Type Keyboard");
     }
 
     getWindow()
@@ -84,6 +85,9 @@ public class SettingsActivity extends PreferenceActivity {
     getWindow()
         .setNavigationBarColor(
             MaterialColors.getColor(this, com.google.android.material.R.attr.colorSurface, 0));
+    
+    setTitle("Ghost ide Keybord");
+    
   }
 
   @Override

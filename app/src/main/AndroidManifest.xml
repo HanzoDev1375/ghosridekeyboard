@@ -38,6 +38,7 @@
             android:name=".latin.settings.SettingsActivity"
             android:label="@string/english_ime_name"
             android:exported="true"
+            android:theme="@style/platformSettingsTheme"
             
         >
             <intent-filter>
