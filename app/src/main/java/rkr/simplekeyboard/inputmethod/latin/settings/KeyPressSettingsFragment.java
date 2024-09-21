@@ -33,6 +33,8 @@ import rkr.simplekeyboard.inputmethod.latin.AudioAndHapticFeedbackManager;
  * long press delay
  */
 public final class KeyPressSettingsFragment extends SubScreenFragment {
+  
+  
 
   @Override
   public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {

@@ -17,6 +17,7 @@
 package rkr.simplekeyboard.inputmethod.latin.settings;
 
 import android.app.backup.BackupManager;
+import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.os.Build;
@@ -25,6 +26,7 @@ import android.util.Log;
 import androidx.preference.Preference;
 import androidx.preference.PreferenceFragmentCompat;
 import androidx.preference.PreferenceScreen;
+import com.google.android.material.transition.MaterialSharedAxis;
 import rkr.simplekeyboard.inputmethod.compat.PreferenceManagerCompat;
 
 /**
@@ -36,6 +38,16 @@ public abstract class SubScreenFragment extends PreferenceFragmentCompat
 
   private OnSharedPreferenceChangeListener mSharedPreferenceChangeListener;
   public static boolean isOnCreateCalled = false;
+
+  @Override
+  public void onCreate(Bundle arg0) {
+    super.onCreate(arg0);
+    // TODO: Implement this method
+    setEnterTransition(new MaterialSharedAxis(MaterialSharedAxis.Z, true));
+    setReturnTransition(new MaterialSharedAxis(MaterialSharedAxis.Z, false));
+    setExitTransition(new MaterialSharedAxis(MaterialSharedAxis.Z, true));
+    setReenterTransition(new MaterialSharedAxis(MaterialSharedAxis.Z, false));
+  }
 
   static void setPreferenceEnabled(
       final String prefKey, final boolean enabled, final PreferenceScreen screen) {
@@ -85,9 +97,23 @@ public abstract class SubScreenFragment extends PreferenceFragmentCompat
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
       super.getPreferenceManager().setStorageDeviceProtected();
     }
-
-    mSharedPreferenceChangeListener = this;
-
+    mSharedPreferenceChangeListener =
+        new OnSharedPreferenceChangeListener() {
+          @Override
+          public void onSharedPreferenceChanged(final SharedPreferences prefs, final String key) {
+            final SubScreenFragment fragment = SubScreenFragment.this;
+            final Context context = fragment.getActivity();
+            if (context == null || fragment.getPreferenceScreen() == null) {
+              final String tag = fragment.getClass().getSimpleName();
+              // TODO: Introduce a static function to register this class and ensure that
+              // onCreate must be called before "onSharedPreferenceChanged" is called.
+              Log.w(tag, "onSharedPreferenceChanged called before activity starts.");
+              return;
+            }
+            new BackupManager(context).dataChanged();
+            fragment.onSharedPreferenceChanged(prefs, key);
+          }
+        };
     getSharedPreferences()
         .registerOnSharedPreferenceChangeListener(mSharedPreferenceChangeListener);
   }
@@ -100,16 +126,5 @@ public abstract class SubScreenFragment extends PreferenceFragmentCompat
   }
 
   @Override
-  public void onSharedPreferenceChanged(final SharedPreferences prefs, final String key) {
-    // This method may be overridden by an extended class.
-    final SubScreenFragment fragment = SubScreenFragment.this;
-
-    if (isOnCreateCalled) {
-      new BackupManager(getContext()).dataChanged();
-      fragment.onSharedPreferenceChanged(prefs, key);
-    } else {
-      final String tag = fragment.getClass().getSimpleName();
-      Log.w(tag, "onSharedPreferenceChanged called before activity starts.");
-    }
-  }
+  public void onSharedPreferenceChanged(final SharedPreferences prefs, final String key) {}
 }

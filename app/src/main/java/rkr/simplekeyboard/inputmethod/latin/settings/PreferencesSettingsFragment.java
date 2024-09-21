@@ -19,6 +19,8 @@ package rkr.simplekeyboard.inputmethod.latin.settings;
 import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import androidx.preference.CheckBoxPreference;
 import androidx.preference.Preference;
 import androidx.preference.SwitchPreferenceCompat;
@@ -48,12 +50,13 @@ public final class PreferencesSettingsFragment extends SubScreenFragment {
 
   @Override
   public void onSharedPreferenceChanged(final SharedPreferences prefs, final String key) {
-    super.onSharedPreferenceChanged(prefs, key);// Added by EUP
+
     if (key.equals(Settings.PREF_HIDE_SPECIAL_CHARS) || key.equals(Settings.PREF_SHOW_NUMBER_ROW)) {
       KeyboardLayoutSet.onKeyboardThemeChanged();
     } else if (key.equals(Settings.PREF_HIDE_LANGUAGE_SWITCH_KEY)) {
       updateImeSwitchEnabledPref();
     }
+    super.onSharedPreferenceChanged(prefs, key);
   }
 
   /**

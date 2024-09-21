@@ -26,6 +26,7 @@ import androidx.preference.PreferenceCategory;
 import androidx.preference.PreferenceFragmentCompat;
 import androidx.preference.PreferenceGroup;
 import androidx.preference.SwitchPreferenceCompat;
+import com.google.android.material.transition.MaterialSharedAxis;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -42,6 +43,16 @@ public final class SingleLanguageSettingsFragment extends PreferenceFragmentComp
 
   private RichInputMethodManager mRichImm;
   private List<SubtypePreference> mSubtypePreferences;
+
+  @Override
+  public void onCreate(Bundle arg0) {
+    super.onCreate(arg0);
+    // TODO: Implement this method
+    setEnterTransition(new MaterialSharedAxis(MaterialSharedAxis.Z, true));
+    setReturnTransition(new MaterialSharedAxis(MaterialSharedAxis.Z, false));
+    setExitTransition(new MaterialSharedAxis(MaterialSharedAxis.Z, true));
+    setReenterTransition(new MaterialSharedAxis(MaterialSharedAxis.Z, false));
+  }
 
   @Override
   public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
