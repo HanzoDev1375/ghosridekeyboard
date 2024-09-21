@@ -14,36 +14,45 @@
      limitations under the License.
 -->
 
-<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
-    android:title="@string/settings_screen_preferences">
-    <CheckBoxPreference
-        android:key="auto_cap"
-        android:title="@string/auto_cap"
-        android:summary="@string/auto_cap_summary"
-        android:defaultValue="true"
-        android:persistent="true" />
-    <CheckBoxPreference
-        android:key="pref_show_number_row"
-        android:title="@string/show_number_row"
-        android:defaultValue="false" />
-    <CheckBoxPreference
-        android:key="pref_hide_special_chars"
-        android:title="@string/hide_special_chars"
-        android:defaultValue="false" />
-    <CheckBoxPreference
-        android:key="pref_hide_language_switch_key"
-        android:title="@string/hide_language_switch_key"
-        android:defaultValue="false" />
-    <CheckBoxPreference
-        android:key="pref_enable_ime_switch"
-        android:title="@string/pref_enable_ime_switch"
-        android:defaultValue="false" />
-    <CheckBoxPreference
-        android:key="pref_space_swipe"
-        android:title="@string/space_swipe"
-        android:defaultValue="false" />
-    <CheckBoxPreference
-        android:key="pref_delete_swipe"
-        android:title="@string/delete_swipe"
-        android:defaultValue="false" />
-</PreferenceScreen>
+<androidx.preference.PreferenceScreen
+  xmlns:app="http://schemas.android.com/apk/res-auto"
+  app:title="@string/settings_screen_preferences">
+
+  <CheckBoxPreference
+    app:iconSpaceReserved="false"
+    app:key="auto_cap"
+    app:title="@string/auto_cap"
+    app:summary="@string/auto_cap_summary"
+    app:defaultValue="true"
+    app:persistent="true" />
+  <CheckBoxPreference
+    app:iconSpaceReserved="false"
+    app:key="pref_show_number_row"
+    app:title="@string/show_number_row"
+    app:defaultValue="false" />
+  <CheckBoxPreference
+    app:iconSpaceReserved="false"
+    app:key="pref_hide_special_chars"
+    app:title="@string/hide_special_chars"
+    app:defaultValue="false" />
+  <CheckBoxPreference
+    app:iconSpaceReserved="false"
+    app:key="pref_hide_language_switch_key"
+    app:title="@string/hide_language_switch_key"
+    app:defaultValue="false" />
+  <CheckBoxPreference
+    app:iconSpaceReserved="false"
+    app:key="pref_enable_ime_switch"
+    app:title="@string/pref_enable_ime_switch"
+    app:defaultValue="false" />
+  <CheckBoxPreference
+    app:iconSpaceReserved="false"
+    app:key="pref_space_swipe"
+    app:title="@string/space_swipe"
+    app:defaultValue="false" />
+  <CheckBoxPreference
+    app:iconSpaceReserved="false"
+    app:key="pref_delete_swipe"
+    app:title="@string/delete_swipe"
+    app:defaultValue="false" />
+</androidx.preference.PreferenceScreen>

@@ -17,66 +17,74 @@
 package rkr.simplekeyboard.inputmethod.latin.settings;
 
 import android.os.Build;
-import android.preference.CheckBoxPreference;
-import android.preference.Preference;
-import android.preference.PreferenceGroup;
-import android.preference.SwitchPreference;
-
+import androidx.preference.CheckBoxPreference;
+import androidx.preference.Preference;
+import androidx.preference.PreferenceGroup;
+import androidx.preference.SwitchPreferenceCompat;
 import java.util.ArrayList;
 
 public class TwoStatePreferenceHelper {
-    private static final String EMPTY_TEXT = "";
 
-    private TwoStatePreferenceHelper() {
-        // This utility class is not publicly instantiable.
+  private static final String EMPTY_TEXT = "";
+
+  private TwoStatePreferenceHelper() {
+    // This utility class is not publicly instantiable.
+  }
+
+  public static void replaceCheckBoxPreferencesByMaterialSwitchPreferences(
+      final PreferenceGroup group) {
+    // The keyboard settings keeps using a CheckBoxPreference on KitKat or previous.
+    if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.KITKAT) {
+      return;
+    }
+    // The keyboard settings starts using a SwitchPreference without switch on/off text on
+    // API versions newer than KitKat.
+    replaceAllCheckBoxPreferencesByMaterialSwitchPreferences(group);
+  }
+
+  private static void replaceAllCheckBoxPreferencesByMaterialSwitchPreferences(
+      final PreferenceGroup group) {
+
+    final var preferences = new ArrayList<Preference>();
+    final int count = group.getPreferenceCount();
+
+    for (int index = 0; index < count; index++) {
+      preferences.add(group.getPreference(index));
     }
 
-    public static void replaceCheckBoxPreferencesBySwitchPreferences(final PreferenceGroup group) {
-        // The keyboard settings keeps using a CheckBoxPreference on KitKat or previous.
-        if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.KITKAT) {
-            return;
+    group.removeAll();
+
+    for (int index = 0; index < count; index++) {
+      final Preference preference = preferences.get(index);
+      if (preference instanceof CheckBoxPreference) {
+        addMaterialSwitchPreferenceBasedOnCheckBoxPreference(
+            (CheckBoxPreference) preference, group);
+      } else {
+        group.addPreference(preference);
+        if (preference instanceof PreferenceGroup) {
+          replaceAllCheckBoxPreferencesByMaterialSwitchPreferences((PreferenceGroup) preference);
         }
-        // The keyboard settings starts using a SwitchPreference without switch on/off text on
-        // API versions newer than KitKat.
-        replaceAllCheckBoxPreferencesBySwitchPreferences(group);
+      }
     }
+  }
 
-    private static void replaceAllCheckBoxPreferencesBySwitchPreferences(
-            final PreferenceGroup group) {
-        final ArrayList<Preference> preferences = new ArrayList<>();
-        final int count = group.getPreferenceCount();
-        for (int index = 0; index < count; index++) {
-            preferences.add(group.getPreference(index));
-        }
-        group.removeAll();
-        for (int index = 0; index < count; index++) {
-            final Preference preference = preferences.get(index);
-            if (preference instanceof CheckBoxPreference) {
-                addSwitchPreferenceBasedOnCheckBoxPreference((CheckBoxPreference)preference, group);
-            } else {
-                group.addPreference(preference);
-                if (preference instanceof PreferenceGroup) {
-                    replaceAllCheckBoxPreferencesBySwitchPreferences((PreferenceGroup)preference);
-                }
-            }
-        }
-    }
+  static void addMaterialSwitchPreferenceBasedOnCheckBoxPreference(
+      final CheckBoxPreference checkBox, final PreferenceGroup group) {
+    final var switchPreferenceCompat = new SwitchPreferenceCompat(checkBox.getContext());
 
-    static void addSwitchPreferenceBasedOnCheckBoxPreference(final CheckBoxPreference checkBox,
-            final PreferenceGroup group) {
-        final SwitchPreference switchPref = new SwitchPreference(checkBox.getContext());
-        switchPref.setTitle(checkBox.getTitle());
-        switchPref.setKey(checkBox.getKey());
-        switchPref.setOrder(checkBox.getOrder());
-        switchPref.setPersistent(checkBox.isPersistent());
-        switchPref.setEnabled(checkBox.isEnabled());
-        switchPref.setChecked(checkBox.isChecked());
-        switchPref.setSummary(checkBox.getSummary());
-        switchPref.setSummaryOn(checkBox.getSummaryOn());
-        switchPref.setSummaryOff(checkBox.getSummaryOff());
-        switchPref.setSwitchTextOn(EMPTY_TEXT);
-        switchPref.setSwitchTextOff(EMPTY_TEXT);
-        group.addPreference(switchPref);
-        switchPref.setDependency(checkBox.getDependency());
-    }
+    switchPreferenceCompat.setTitle(checkBox.getTitle());
+    switchPreferenceCompat.setKey(checkBox.getKey());
+    switchPreferenceCompat.setOrder(checkBox.getOrder());
+    switchPreferenceCompat.setPersistent(checkBox.isPersistent());
+    switchPreferenceCompat.setEnabled(checkBox.isEnabled());
+    switchPreferenceCompat.setChecked(checkBox.isChecked());
+    switchPreferenceCompat.setIconSpaceReserved(checkBox.isIconSpaceReserved());
+    switchPreferenceCompat.setSummary(checkBox.getSummary());
+    switchPreferenceCompat.setSummaryOn(checkBox.getSummaryOn());
+    switchPreferenceCompat.setSummaryOff(checkBox.getSummaryOff());
+    switchPreferenceCompat.setSwitchTextOn(EMPTY_TEXT);
+    switchPreferenceCompat.setSwitchTextOff(EMPTY_TEXT);
+    group.addPreference(switchPreferenceCompat);
+    switchPreferenceCompat.setDependency(checkBox.getDependency());
+  }
 }

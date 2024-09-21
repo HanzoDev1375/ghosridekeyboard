@@ -14,39 +14,44 @@
      limitations under the License.
 -->
 
-<PreferenceScreen
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:latin="http://schemas.android.com/apk/res-auto"
-    android:title="@string/settings_screen_key_press">
-    <CheckBoxPreference
-        android:key="vibrate_on"
-        android:title="@string/vibrate_on_keypress"
-        android:defaultValue="@bool/config_default_vibration_enabled"
-        android:persistent="true" />
-    <rkr.simplekeyboard.inputmethod.latin.settings.SeekBarDialogPreference
-        android:key="pref_vibration_duration_settings"
-        android:title="@string/prefs_keypress_vibration_duration_settings"
-        android:dependency="vibrate_on"
-        latin:maxValue="@integer/config_max_vibration_duration" />
-    <CheckBoxPreference
-        android:key="sound_on"
-        android:title="@string/sound_on_keypress"
-        android:defaultValue="@bool/config_default_sound_enabled"
-        android:persistent="true" />
-    <rkr.simplekeyboard.inputmethod.latin.settings.SeekBarDialogPreference
-        android:key="pref_keypress_sound_volume"
-        android:title="@string/prefs_keypress_sound_volume_settings"
-        android:dependency="sound_on"
-        latin:maxValue="100" /> <!-- percent -->
-    <CheckBoxPreference
-        android:key="popup_on"
-        android:title="@string/popup_on_keypress"
-        android:defaultValue="@bool/config_default_key_preview_popup"
-        android:persistent="true" />
-    <rkr.simplekeyboard.inputmethod.latin.settings.SeekBarDialogPreference
-        android:key="pref_key_longpress_timeout"
-        android:title="@string/prefs_key_longpress_timeout_settings"
-        latin:minValue="@integer/config_min_longpress_timeout"
-        latin:maxValue="@integer/config_max_longpress_timeout"
-        latin:stepValue="@integer/config_longpress_timeout_step" />
-</PreferenceScreen>
+<androidx.preference.PreferenceScreen xmlns:app="http://schemas.android.com/apk/res-auto"
+  app:title="@string/settings_screen_key_press">
+  <CheckBoxPreference
+    app:iconSpaceReserved="false"
+    app:key="vibrate_on"
+    app:title="@string/vibrate_on_keypress"
+    app:defaultValue="@bool/config_default_vibration_enabled"
+    app:persistent="true" />
+  <rkr.simplekeyboard.inputmethod.latin.settings.SliderDialogPreference
+    app:iconSpaceReserved="false"
+    app:key="pref_vibration_duration_settings"
+    app:title="@string/prefs_keypress_vibration_duration_settings"
+    app:dependency="vibrate_on"
+    app:maxValue="@integer/config_max_vibration_duration" />
+  <CheckBoxPreference
+    app:iconSpaceReserved="false"
+    app:key="sound_on"
+    app:title="@string/sound_on_keypress"
+    app:defaultValue="@bool/config_default_sound_enabled"
+    app:persistent="true" />
+  <rkr.simplekeyboard.inputmethod.latin.settings.SliderDialogPreference
+    app:iconSpaceReserved="false"
+    app:key="pref_keypress_sound_volume"
+    app:title="@string/prefs_keypress_sound_volume_settings"
+    app:dependency="sound_on"
+    app:maxValue="100" />
+  <!-- percent -->
+  <CheckBoxPreference
+    app:iconSpaceReserved="false"
+    app:key="popup_on"
+    app:title="@string/popup_on_keypress"
+    app:defaultValue="@bool/config_default_key_preview_popup"
+    app:persistent="true" />
+  <rkr.simplekeyboard.inputmethod.latin.settings.SliderDialogPreference
+    app:iconSpaceReserved="false"
+    app:key="pref_key_longpress_timeout"
+    app:title="@string/prefs_key_longpress_timeout_settings"
+    app:minValue="@integer/config_min_longpress_timeout"
+    app:maxValue="@integer/config_max_longpress_timeout"
+    app:stepValue="@integer/config_longpress_timeout_step" />
+</androidx.preference.PreferenceScreen>

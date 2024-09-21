@@ -21,16 +21,22 @@ import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.os.Build;
 import android.os.Bundle;
-
+import android.view.View;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import rkr.simplekeyboard.inputmethod.R;
 import rkr.simplekeyboard.inputmethod.keyboard.KeyboardTheme;
 
 /** "Appearance" settings sub screen. */
 public final class AppearanceSettingsFragment extends SubScreenFragment {
+
+  private boolean isCalled = false;
+
   @Override
-  public void onCreate(final Bundle icicle) {
-    super.onCreate(icicle);
-    addPreferencesFromResource(R.xml.prefs_screen_appearance);
+  public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
+    super.onCreatePreferences(savedInstanceState, rootKey);
+    setPreferencesFromResource(R.xml.prefs_screen_appearance, rootKey);
+    // addPreferencesFromResource(R.xml.prefs_screen_appearance);
 
     if (Build.VERSION.SDK_INT < Build.VERSION_CODES.P) {
       removePreference(Settings.PREF_MATCHING_NAVBAR_COLOR);
@@ -39,6 +45,13 @@ public final class AppearanceSettingsFragment extends SubScreenFragment {
     setupKeyboardHeightSettings();
     setupBottomOffsetPortraitSettings();
     setupKeyboardColorSettings();
+    refreshSettings();
+  }
+
+  @Override
+  public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+    super.onViewCreated(view, savedInstanceState);
+    isCalled = true;
   }
 
   @Override
@@ -53,26 +66,29 @@ public final class AppearanceSettingsFragment extends SubScreenFragment {
   }
 
   private void refreshSettings() {
-    ThemeSettingsFragment.updateKeyboardThemeSummary(findPreference(Settings.SCREEN_THEME));
+    // Only invoke when Fragment has created it's view (preferences included)
+    if (isCalled) {
+      ThemePreference.updateKeyboardThemeSummary(findPreference(Settings.SCREEN_THEME));
 
-    final SharedPreferences prefs = getSharedPreferences();
-    final KeyboardTheme theme = KeyboardTheme.getKeyboardTheme(prefs);
-    final boolean isSystemTheme =
-        theme.mThemeId != KeyboardTheme.THEME_ID_SYSTEM
-            && theme.mThemeId != KeyboardTheme.THEME_ID_SYSTEM_BORDER;
-    setPreferenceEnabled(Settings.PREF_KEYBOARD_COLOR, isSystemTheme);
+      final SharedPreferences prefs = getSharedPreferences();
+      final KeyboardTheme theme = KeyboardTheme.getKeyboardTheme(prefs);
+      final boolean isSystemTheme =
+          theme.mThemeId != KeyboardTheme.THEME_ID_SYSTEM
+              && theme.mThemeId != KeyboardTheme.THEME_ID_SYSTEM_BORDER;
+      setPreferenceEnabled(Settings.PREF_KEYBOARD_COLOR, isSystemTheme);
+    }
   }
 
   private void setupKeyboardHeightSettings() {
-    final SeekBarDialogPreference pref =
-        (SeekBarDialogPreference) findPreference(Settings.PREF_KEYBOARD_HEIGHT);
+    final SliderDialogPreference pref =
+        (SliderDialogPreference) findPreference(Settings.PREF_KEYBOARD_HEIGHT);
     if (pref == null) {
       return;
     }
     final SharedPreferences prefs = getSharedPreferences();
     final Resources res = getResources();
     pref.setInterface(
-        new SeekBarDialogPreference.ValueProxy() {
+        new SliderDialogPreference.ValueProxy() {
           private static final float PERCENTAGE_FLOAT = 100.0f;
 
           private float getValueFromPercentage(final int percentage) {
@@ -117,15 +133,14 @@ public final class AppearanceSettingsFragment extends SubScreenFragment {
   }
 
   private void setupBottomOffsetPortraitSettings() {
-    final SeekBarDialogPreference pref =
-        (SeekBarDialogPreference) findPreference(Settings.PREF_BOTTOM_OFFSET_PORTRAIT);
+    final SliderDialogPreference pref = findPreference(Settings.PREF_BOTTOM_OFFSET_PORTRAIT);
     if (pref == null) {
       return;
     }
     final SharedPreferences prefs = getSharedPreferences();
     final Resources res = getResources();
     pref.setInterface(
-        new SeekBarDialogPreference.ValueProxy() {
+        new SliderDialogPreference.ValueProxy() {
           @Override
           public void writeValue(final int value, final String key) {
             prefs.edit().putInt(key, value).apply();

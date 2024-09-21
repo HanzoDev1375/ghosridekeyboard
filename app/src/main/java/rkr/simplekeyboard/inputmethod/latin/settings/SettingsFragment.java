@@ -16,80 +16,77 @@
 
 package rkr.simplekeyboard.inputmethod.latin.settings;
 
-import android.app.AlertDialog;
-import android.content.Intent;
+import android.content.ActivityNotFoundException;
 import android.content.ComponentName;
+import android.content.Intent;
 import android.os.Bundle;
-import android.preference.Preference;
 import android.provider.Settings;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Toast;
-import android.preference.PreferenceScreen;
-
+import androidx.preference.Preference;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import rkr.simplekeyboard.inputmethod.R;
 import rkr.simplekeyboard.inputmethod.latin.utils.ApplicationUtils;
 
 public final class SettingsFragment extends InputMethodSettingsFragment {
-  public static final String main = "Ninja.coder.Ghostemane.code.MainActivity";
+
+  private static final String GHOST_APP_PACKAGE = "Ninja.coder.Ghostemane.code";
+  private static final String GHOST_TARGET_ACTIVITY_CLASS =
+      "Ninja.coder.Ghostemane.code.MainActivity";
 
   @Override
-  public void onCreate(final Bundle icicle) {
-    super.onCreate(icicle);
-    setHasOptionsMenu(true);
+  public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
+    super.onCreatePreferences(savedInstanceState, rootKey);
+    // setHasOptionsMenu(true);
     addPreferencesFromResource(R.xml.prefs);
-    final PreferenceScreen preferenceScreen = getPreferenceScreen();
-    preferenceScreen.setTitle(
-        ApplicationUtils.getActivityTitleResId(getActivity(), SettingsActivity.class));
+
+    getPreferenceScreen()
+        .setTitle(ApplicationUtils.getActivityTitleResId(getActivity(), SettingsActivity.class));
 
     var openApp = findPreference("open_ghost_ide");
     var keyboardinstall = findPreference("keyboardset");
-    if (keyboardinstall == null) {
-      return;
-    }
-    if (openApp == null) {
-      return;
-    }
-    keyboardinstall.setOnPreferenceClickListener(
-        __ -> {
-          keyboardSet();
-         return true;
-        });
+
+    if (keyboardinstall == null || openApp == null) return;
+
+    keyboardinstall.setOnPreferenceClickListener(this::configInputMethod);
+
     openApp.setOnPreferenceClickListener(
+        // assuming activity is exported
         it -> {
-          Intent intent = new Intent();
-
-          intent.setComponent(new ComponentName("Ninja.coder.Ghostemane.code", main));
-          if (intent.resolveActivity(getActivity().getPackageManager()) != null) {
-            // اگر فعالیت موجود است، آن را شروع کنید
+          try {
+            var intent = new Intent();
+            intent.setComponent(new ComponentName(GHOST_APP_PACKAGE, GHOST_TARGET_ACTIVITY_CLASS));
             startActivity(intent);
-          } else {
-            // اگر فعالیت موجود نیست، می‌توانید یک پیغام خطا را نمایش دهید یا یک فعالیت پیش‌فرض را
-            // باز کنید
-            Toast.makeText(getActivity(), "فعالیت مورد نظر موجود نیست", Toast.LENGTH_SHORT).show();
+          } catch (ActivityNotFoundException e) {
+            Toast.makeText(
+                    getContext(),
+                    "Ghost IDE is not installed! " + "\n" + e.getLocalizedMessage(),
+                    Toast.LENGTH_SHORT)
+                .show();
           }
-
           return true;
         });
   }
 
-  void keyboardSet() {
-    var dialog = new AlertDialog.Builder(getActivity(),AlertDialog.THEME_DEVICE_DEFAULT_DARK);
-    dialog.setTitle("Keyboard install");
-    dialog.setMessage("You can install the keyboard");
-    dialog.setPositiveButton(
-        "install settings",
-        (__, ___) -> {
-          Intent i = new Intent(Settings.ACTION_INPUT_METHOD_SETTINGS);
-          startActivity(i);
-        });
-    dialog.setNegativeButton(
-        "change",
-        (__, ___) -> {
-          InputMethodManager i =
-              (InputMethodManager) getActivity().getSystemService("input_method");
-          i.showInputMethodPicker();
-        });
-    dialog.show();
+  boolean configInputMethod(Preference preference) {
+    new MaterialAlertDialogBuilder(preference.getContext())
+        .setTitle("Install Keyboard")
+        .setMessage("You can install the keyboard")
+        .setPositiveButton(
+            "Install settings",
+            (d, w) -> {
+              startActivity(new Intent(Settings.ACTION_INPUT_METHOD_SETTINGS));
+            })
+        .setNegativeButton(
+            "Change input method",
+            (d, w) -> {
+              InputMethodManager i =
+                  (InputMethodManager) getActivity().getSystemService("input_method");
+              i.showInputMethodPicker();
+            })
+        .setNeutralButton("Cancel", null)
+        .setCancelable(false)
+        .show();
+    return true; // to handle preference click
   }
 }

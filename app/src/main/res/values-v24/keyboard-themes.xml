@@ -18,23 +18,15 @@
 */
 -->
 <resources xmlns:tools="http://schemas.android.com/tools">
-    <!-- An element must be a keyboard theme id of
-         {@link rkr.simplekeyboard.inputmethod.keyboard.KeyboardTheme#THEME_ID_ICS} etc. -->
-    <integer-array name="keyboard_theme_ids" translatable="false" tools:ignore="InconsistentArrays">
-        <item>3</item>
-        <item>4</item>
-        <item>1</item>
-        <item>2</item>
-        <item>5</item>
-        <item>6</item>
-    </integer-array>
-
-    <array name="keyboard_theme_colors" translatable="false" tools:ignore="InconsistentArrays">
-        <item>@color/background_lxx_light</item>
-        <item>@color/background_lxx_dark</item>
-        <item>@color/background_lxx_light</item>
-        <item>@color/background_lxx_dark</item>
-        <item>@color/background_lxx_system</item>
-        <item>@color/background_lxx_system</item>
-    </array>
+  <array
+    name="keyboard_theme_colors"
+    translatable="false"
+    tools:ignore="InconsistentArrays">
+    <item>@color/background_lxx_light</item>
+    <item>@color/background_lxx_dark</item>
+    <item>@color/background_lxx_light</item>
+    <item>@color/background_lxx_dark</item>
+    <item>@color/background_lxx_system</item>
+    <item>@color/background_lxx_system</item>
+  </array>
 </resources>

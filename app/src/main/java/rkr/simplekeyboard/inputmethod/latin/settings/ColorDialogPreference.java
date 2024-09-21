@@ -1,128 +1,108 @@
-
 package rkr.simplekeyboard.inputmethod.latin.settings;
 
-import android.app.AlertDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.graphics.Color;
-import android.graphics.PorterDuff;
-import android.preference.DialogPreference;
 import android.util.AttributeSet;
+import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.SeekBar;
 import android.widget.TextView;
-
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.preference.Preference;
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
+import com.google.android.material.slider.Slider;
 import rkr.simplekeyboard.inputmethod.R;
 
-public final class ColorDialogPreference extends DialogPreference
-        implements SeekBar.OnSeekBarChangeListener {
-    public interface ValueProxy {
-        int readValue(final String key);
-        void writeDefaultValue(final String key);
-        void writeValue(final int value, final String key);
-    }
+public final class ColorDialogPreference extends Preference
+    implements Slider.OnChangeListener {
 
-    private TextView mValueView;
-    private SeekBar mSeekBarRed;
-    private SeekBar mSeekBarGreen;
-    private SeekBar mSeekBarBlue;
+  public interface ValueProxy {
+    int readValue(final String key);
 
-    private ValueProxy mValueProxy;
+    void writeDefaultValue(final String key);
 
-    public ColorDialogPreference(final Context context, final AttributeSet attrs) {
-        super(context, attrs);
-        setDialogLayoutResource(R.layout.color_dialog);
-    }
+    void writeValue(final int value, final String key);
+  }
 
-    public void setInterface(final ValueProxy proxy) {
-        mValueProxy = proxy;
-    }
+  private TextView mValueView;
+  private Slider sliderRed, sliderGreen, sliderBlue;
+  private ValueProxy mValueProxy;
 
-    @Override
-    protected View onCreateDialogView() {
-        final View view = super.onCreateDialogView();
-        mSeekBarRed = (SeekBar)view.findViewById(R.id.seek_bar_dialog_bar_red);
-        mSeekBarRed.setMax(255);
-        mSeekBarRed.setOnSeekBarChangeListener(this);
-        mSeekBarRed.getProgressDrawable().setColorFilter(Color.RED, PorterDuff.Mode.SRC_IN);
-        mSeekBarRed.getThumb().setColorFilter(Color.RED, PorterDuff.Mode.SRC_IN);
-        mSeekBarGreen = (SeekBar)view.findViewById(R.id.seek_bar_dialog_bar_green);
-        mSeekBarGreen.setMax(255);
-        mSeekBarGreen.setOnSeekBarChangeListener(this);
-        mSeekBarGreen.getThumb().setColorFilter(Color.GREEN, PorterDuff.Mode.SRC_IN);
-        mSeekBarGreen.getProgressDrawable().setColorFilter(Color.GREEN, PorterDuff.Mode.SRC_IN);
-        mSeekBarBlue = (SeekBar)view.findViewById(R.id.seek_bar_dialog_bar_blue);
-        mSeekBarBlue.setMax(255);
-        mSeekBarBlue.setOnSeekBarChangeListener(this);
-        mSeekBarBlue.getThumb().setColorFilter(Color.BLUE, PorterDuff.Mode.SRC_IN);
-        mSeekBarBlue.getProgressDrawable().setColorFilter(Color.BLUE, PorterDuff.Mode.SRC_IN);
-        mValueView = (TextView)view.findViewById(R.id.seek_bar_dialog_value);
-        return view;
-    }
+  public ColorDialogPreference(Context context) {
+    super(context);
+  }
 
-    @Override
-    protected void onBindDialogView(final View view) {
-        final int color = mValueProxy.readValue(getKey());
-        mSeekBarRed.setProgress(Color.red(color));
-        mSeekBarGreen.setProgress(Color.green(color));
-        mSeekBarBlue.setProgress(Color.blue(color));
-        setHeaderText(color);
-    }
+  public ColorDialogPreference(Context context, AttributeSet attrs) {
+    super(context, attrs);
+  }
 
-    @Override
-    protected void onPrepareDialogBuilder(final AlertDialog.Builder builder) {
-        builder.setPositiveButton(android.R.string.ok, this)
-                .setNegativeButton(android.R.string.cancel, this)
-                .setNeutralButton(R.string.button_default, this);
-    }
+  public ColorDialogPreference(Context context, AttributeSet attrs, int defStyle) {
+    super(context, attrs, defStyle);
+  }
 
-    @Override
-    public void onClick(final DialogInterface dialog, final int which) {
-        super.onClick(dialog, which);
-        final String key = getKey();
-        if (which == DialogInterface.BUTTON_POSITIVE) {
-            super.onClick(dialog, which);
-            final int value = Color.rgb(
-                    mSeekBarRed.getProgress(),
-                    mSeekBarGreen.getProgress(),
-                    mSeekBarBlue.getProgress());
-            mValueProxy.writeValue(value, key);
-            return;
-        }
-        if (which == DialogInterface.BUTTON_NEUTRAL) {
-            super.onClick(dialog, which);
-            mValueProxy.writeDefaultValue(key);
-            return;
-        }
-    }
+  @Override
+  protected void onClick() {
+    super.onClick();
 
-    @Override
-    public void onProgressChanged(final SeekBar seekBar, final int progress, final boolean fromUser) {
-        int color = Color.rgb(
-                mSeekBarRed.getProgress(),
-                mSeekBarGreen.getProgress(),
-                mSeekBarBlue.getProgress());
-        setHeaderText(color);
-    }
+    LayoutInflater li = LayoutInflater.from((AppCompatActivity) getContext());
+    View view = li.inflate(R.layout.color_dialog, null, false);
 
-    @Override
-    public void onStartTrackingTouch(SeekBar seekBar) {
-    }
+    sliderRed = (Slider) view.findViewById(R.id.slider_red);
+    sliderGreen = (Slider) view.findViewById(R.id.slider_green);
+    sliderBlue = (Slider) view.findViewById(R.id.slider_blue);
+    mValueView = (TextView) view.findViewById(R.id.tv_value);
 
-    @Override
-    public void onStopTrackingTouch(SeekBar seekBar) {
-    }
+    sliderRed.addOnChangeListener(this);
+    sliderGreen.addOnChangeListener(this);
+    sliderBlue.addOnChangeListener(this);
 
-    private void setHeaderText(int color) {
-        mValueView.setText(getValueText(color));
-        boolean bright = Color.red(color) + Color.green(color) + Color.blue(color) > 128 * 3;
-        mValueView.setTextColor(bright ? Color.BLACK : Color.WHITE);
-        mValueView.setBackgroundColor(color);
-    }
+    final var key = getKey();
+    new MaterialAlertDialogBuilder((AppCompatActivity) getContext())
+        .setTitle(getTitle())
+        .setPositiveButton(
+            android.R.string.ok,
+            (d, w) -> {
+              final int value =
+                  Color.rgb(sliderRed.getValue(), sliderGreen.getValue(), sliderBlue.getValue());
+              mValueProxy.writeValue(value, key);
+            })
+        .setNegativeButton(android.R.string.cancel, (d, w) -> d.dismiss())
+        .setNeutralButton(
+            R.string.button_default,
+            (d, w) -> {
+              mValueProxy.writeDefaultValue(key);
+            })
+        .setView(view)
+        .setCancelable(false)
+        .show();
 
-    private String getValueText(final int value) {
-        String temp = Integer.toHexString(value);
-        for (; temp.length() < 8; temp = "0" + temp);
-        return temp.substring(2).toUpperCase();
-    }
+    final int color = mValueProxy.readValue(getKey());
+    sliderRed.setValue(Color.red(color));
+    sliderGreen.setValue(Color.green(color));
+    sliderBlue.setValue(Color.blue(color));
+    setHeaderText(color);
+  }
+
+  public void setInterface(final ValueProxy proxy) {
+    mValueProxy = proxy;
+  }
+
+  @Override
+  public void onValueChange(@NonNull Slider slider, float value, boolean fromUser) {
+    int color = Color.rgb(sliderRed.getValue(), sliderGreen.getValue(), sliderBlue.getValue());
+    setHeaderText(color);
+  }
+
+  private void setHeaderText(int color) {
+    mValueView.setText(getValueText(color));
+    boolean bright = Color.red(color) + Color.green(color) + Color.blue(color) > 128 * 3;
+    mValueView.setTextColor(bright ? Color.BLACK : Color.WHITE);
+    mValueView.setBackgroundColor(color);
+  }
+
+  private String getValueText(final int value) {
+    String temp = Integer.toHexString(value);
+    for (; temp.length() < 8; temp = "0" + temp);
+    return temp.substring(2).toUpperCase();
+  }
 }

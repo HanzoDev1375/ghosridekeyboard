@@ -1,15 +1,16 @@
-# Ghost ide keyboard
+# Ghost IDE Keyboard Plugin
+
+This is a commercial keyboard plugin for Ghost IDE, installed separately from the main app. Installation is optional but recommended for enhanced functionality.
+
+## Key Updates
+
+- Added support for AndroidX and Material You.
+
+- Refactored codebase for better performance and maintainability.
+
+- Updated various components for improved user experience.
 
 
-<hr>
+**Original Code**
 
-
-### This is a commercial keyboard plugin for the Ghost IDE program that is installed separately and there is no obligation to install it
-
-
-
-<hr>
-
-## Main code!
-
-[Orginal Code]("https://github.com/rkkr/simple-keyboard")
+The plugin is based on this simple keyboard [project](https://github.com/rkkr/simple-keyboard).

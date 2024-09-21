@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+  <style
+    name="AppTheme.MaterialAlertDialog"
+    parent="@style/ThemeOverlay.Material3.MaterialAlertDialog">
+    <item name="shapeAppearanceOverlay">@style/MaterialDialog.ShapeAppearance</item>
+  </style>
+  <style
+    name="MaterialDialog.ShapeAppearance"
+    parent="">
+    <item name="cornerSize">28dp</item>
+  </style>
+  <style
+    name="AppTheme.SwitchPreferenceCompat"
+    parent="Preference.SwitchPreferenceCompat.Material">
+    <item name="android:widgetLayout">@layout/switch_preference_compat_widget</item>
+  </style>
+</resources>

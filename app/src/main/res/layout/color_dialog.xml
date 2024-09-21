@@ -1,43 +1,55 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-     xmlns:android="http://schemas.android.com/apk/res/android"
-     android:layout_height="wrap_content"
-     android:layout_width="match_parent"
-     android:layout_margin="10dp"
-     android:orientation="vertical">
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:app="http://schemas.android.com/apk/res-auto"
+  android:layout_height="wrap_content"
+  android:layout_width="match_parent"
+  android:layout_margin="10dp"
+  android:orientation="vertical">
 
-    <LinearLayout
-         android:layout_height="wrap_content"
-         android:layout_width="match_parent"
-         android:gravity="center_horizontal"
-         android:layout_margin="10dp"
-         android:orientation="horizontal">
+  <LinearLayout
+    android:layout_height="wrap_content"
+    android:layout_width="match_parent"
+    android:gravity="center_horizontal"
+    android:layout_margin="10dp"
+    android:orientation="horizontal">
 
-        <TextView
-             android:layout_height="wrap_content"
-             android:layout_width="match_parent"
-             android:textAlignment="center"
-             android:textSize="20sp"
-             android:id="@+id/seek_bar_dialog_value" />
+    <TextView
+      android:layout_height="wrap_content"
+      android:layout_width="match_parent"
+      android:textAlignment="center"
+      android:textSize="20sp"
+      android:id="@+id/tv_value" />
 
-    </LinearLayout>
+  </LinearLayout>
 
-    <SeekBar
-         android:layout_height="wrap_content"
-         android:layout_width="match_parent"
-         android:layout_margin="10dp"
-         android:id="@+id/seek_bar_dialog_bar_red" />
+  <com.google.android.material.slider.Slider
+    android:layout_height="wrap_content"
+    android:layout_width="match_parent"
+    android:layout_margin="10dp"
+    android:valueFrom="0"
+    android:valueTo="255"
+    app:thumbColor="@color/red"
+    app:haloColor="@color/red"
+    android:id="@+id/slider_red" />
 
-    <SeekBar
-         android:layout_height="wrap_content"
-         android:layout_width="match_parent"
-         android:layout_margin="10dp"
-         android:id="@+id/seek_bar_dialog_bar_green" />
+  <com.google.android.material.slider.Slider
+    android:layout_height="wrap_content"
+    android:layout_width="match_parent"
+    android:layout_margin="10dp"
+    android:valueFrom="0"
+    android:valueTo="255"
+    app:thumbColor="@color/green"
+    app:haloColor="@color/green"
+    android:id="@+id/slider_green" />
 
-    <SeekBar
-         android:layout_height="wrap_content"
-         android:layout_width="match_parent"
-         android:layout_margin="10dp"
-         android:id="@+id/seek_bar_dialog_bar_blue" />
+  <com.google.android.material.slider.Slider
+    android:layout_height="wrap_content"
+    android:layout_width="match_parent"
+    android:layout_margin="10dp"
+    android:valueFrom="0"
+    android:valueTo="255"
+    app:thumbColor="@color/blue"
+    app:haloColor="@color/blue"
+    android:id="@+id/slider_blue" />
 
 </LinearLayout>

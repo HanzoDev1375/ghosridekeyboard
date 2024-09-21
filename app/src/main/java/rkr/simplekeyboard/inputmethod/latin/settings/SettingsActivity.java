@@ -16,27 +16,28 @@
 
 package rkr.simplekeyboard.inputmethod.latin.settings;
 
-import android.annotation.SuppressLint;
-import android.app.ActionBar;
-import android.app.AlertDialog;
 import android.content.Context;
-import android.content.DialogInterface;
-import android.content.Intent;
-import android.os.Build;
 import android.os.Bundle;
-import android.preference.PreferenceActivity;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.inputmethod.InputMethodInfo;
 import android.view.inputmethod.InputMethodManager;
-
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.preference.Preference;
+import androidx.preference.PreferenceFragmentCompat;
 import com.google.android.material.color.MaterialColors;
-import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import rkr.simplekeyboard.inputmethod.R;
-import rkr.simplekeyboard.inputmethod.latin.utils.FragmentUtils;
 
-@SuppressLint("deprecated")
-public class SettingsActivity extends PreferenceActivity {
+public class SettingsActivity extends AppCompatActivity
+    implements PreferenceFragmentCompat.OnPreferenceStartFragmentCallback {
+
+  private static final String TITLE_TAG = "settingsActivityTitle";
+  public static final String DEFAULT_TOOL_TITLE = "Ghost ide Keybord";
   private static final String DEFAULT_FRAGMENT = SettingsFragment.class.getName();
   private static final String TAG = SettingsActivity.class.getSimpleName();
 
@@ -70,9 +71,29 @@ public class SettingsActivity extends PreferenceActivity {
   }
 
   @Override
-  protected void onCreate(final Bundle savedState) {
-    super.onCreate(savedState);
-    final ActionBar actionBar = getActionBar();
+  protected void onCreate(Bundle savedInstanceState) {
+    super.onCreate(savedInstanceState);
+    setContentView(R.layout.settings_activity);
+
+    if (savedInstanceState == null) {
+      getSupportFragmentManager()
+          .beginTransaction()
+          .replace(R.id.settings, new SettingsFragment())
+          .commit();
+    } else {
+      setTitle(savedInstanceState.getCharSequence(TITLE_TAG));
+    }
+
+    getSupportFragmentManager()
+        .addOnBackStackChangedListener(
+            () -> {
+              if (getSupportFragmentManager().getBackStackEntryCount() == 0) {
+                setTitle(DEFAULT_TOOL_TITLE);
+              }
+            });
+    setSupportActionBar(findViewById(R.id.toolbar));
+    ActionBar actionBar = getSupportActionBar();
+
     if (actionBar != null) {
       actionBar.setDisplayHomeAsUpEnabled(true);
       actionBar.setHomeButtonEnabled(true);
@@ -85,33 +106,56 @@ public class SettingsActivity extends PreferenceActivity {
     getWindow()
         .setNavigationBarColor(
             MaterialColors.getColor(this, com.google.android.material.R.attr.colorSurface, 0));
-    
-    setTitle("Ghost ide Keybord");
-    
   }
 
   @Override
-  public boolean onOptionsItemSelected(final MenuItem item) {
+  public void onSaveInstanceState(@NonNull Bundle outState) {
+    super.onSaveInstanceState(outState);
+    // Save current activity title so we can set it again after a configuration change
+    outState.putCharSequence(TITLE_TAG, getTitle());
+  }
+
+  @Override
+  public boolean onSupportNavigateUp() {
+    if (getSupportFragmentManager().popBackStackImmediate()) {
+      return true;
+    }
+    return super.onSupportNavigateUp();
+  }
+
+  @Override
+  public boolean onOptionsItemSelected(@NonNull MenuItem item) {
     if (item.getItemId() == android.R.id.home) {
-      super.onBackPressed();
+      FragmentManager manager = getSupportFragmentManager();
+      if (!manager.popBackStackImmediate()) {
+        finish();
+      }
       return true;
     }
     return super.onOptionsItemSelected(item);
   }
 
   @Override
-  public Intent getIntent() {
-    final Intent intent = super.getIntent();
-    final String fragment = intent.getStringExtra(EXTRA_SHOW_FRAGMENT);
-    if (fragment == null) {
-      intent.putExtra(EXTRA_SHOW_FRAGMENT, DEFAULT_FRAGMENT);
-    }
-    intent.putExtra(EXTRA_NO_HEADERS, true);
-    return intent;
+  public boolean onPreferenceStartFragment(PreferenceFragmentCompat caller, Preference pref) {
+    // Instantiate the new Fragment
+    final Bundle args = pref.getExtras();
+    final Fragment fragment =
+        getSupportFragmentManager()
+            .getFragmentFactory()
+            .instantiate(getClassLoader(), pref.getFragment());
+    fragment.setArguments(args);
+    fragment.setTargetFragment(caller, 0);
+    // Replace the existing Fragment with the new Fragment
+    getSupportFragmentManager()
+        .beginTransaction()
+        .replace(R.id.settings, fragment)
+        .addToBackStack(null)
+        .commit();
+    setTitle(pref.getTitle());
+    return true;
   }
 
-  @Override
-  public boolean isValidFragment(final String fragmentName) {
-    return FragmentUtils.isValidFragment(fragmentName);
+  public Toolbar getToolbar() {
+    return (Toolbar) findViewById(R.id.toolbar);
   }
 }
