@@ -13,4 +13,4 @@ This is a commercial keyboard plugin for Ghost IDE, installed separately from th
 
 **Original Code**
 
-The plugin is based on this simple keyboard [project.]("https://github.com/rkkr/simple-keyboard")
+The plugin is based on this simple keyboard [project](https://github.com/rkkr/simple-keyboard).
