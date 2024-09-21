@@ -166,6 +166,9 @@
     <color name="lightbrown_theme_surfaceContainer_highContrast">#241F17</color>
     <color name="lightbrown_theme_surfaceContainerHigh_highContrast">#2F2921</color>
     <color name="lightbrown_theme_surfaceContainerHighest_highContrast">#3A342B</color>
-
+    <!-- Slider::ColorDialogPreference -->
+    <color name="red">#FF0000</color>
+    <color name="green">#00FF00</color>
+    <color name="blue">#0000FF</color>
 
 </resources>

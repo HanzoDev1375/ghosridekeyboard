@@ -22,9 +22,7 @@ import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.graphics.Color;
 import android.util.Log;
-
 import java.util.concurrent.locks.ReentrantLock;
-
 import rkr.simplekeyboard.inputmethod.R;
 import rkr.simplekeyboard.inputmethod.compat.PreferenceManagerCompat;
 import rkr.simplekeyboard.inputmethod.keyboard.KeyboardTheme;
@@ -33,6 +31,7 @@ import rkr.simplekeyboard.inputmethod.latin.InputAttributes;
 import rkr.simplekeyboard.inputmethod.latin.utils.ResourceUtils;
 
 public final class Settings implements SharedPreferences.OnSharedPreferenceChangeListener {
+    
     private static final String TAG = Settings.class.getSimpleName();
     // Settings screens
     public static final String SCREEN_THEME = "screen_theme";
@@ -60,10 +59,10 @@ public final class Settings implements SharedPreferences.OnSharedPreferenceChang
     private static final int UNDEFINED_PREFERENCE_VALUE_INT = -1;
 
     private Resources mRes;
+    private static boolean isLoadSettingsCalled= false;
     private SharedPreferences mPrefs;
     private SettingsValues mSettingsValues;
     private final ReentrantLock mSettingsValuesLock = new ReentrantLock();
-
     private static final Settings sInstance = new Settings();
 
     public static Settings getInstance() {
@@ -91,20 +90,21 @@ public final class Settings implements SharedPreferences.OnSharedPreferenceChang
     @Override
     public void onSharedPreferenceChanged(final SharedPreferences prefs, final String key) {
         mSettingsValuesLock.lock();
+        
         try {
-            if (mSettingsValues == null) {
-                // TODO: Introduce a static function to register this class and ensure that
-                // loadSettings must be called before "onSharedPreferenceChanged" is called.
+            if (isLoadSettingsCalled) {
+                loadSettings(mSettingsValues.mInputAttributes);
+            } else{
                 Log.w(TAG, "onSharedPreferenceChanged called before loadSettings.");
-                return;
             }
-            loadSettings(mSettingsValues.mInputAttributes);
+            
         } finally {
             mSettingsValuesLock.unlock();
         }
     }
 
     public void loadSettings(final InputAttributes inputAttributes) {
+        isLoadSettingsCalled = true;
         mSettingsValues = new SettingsValues(mPrefs, mRes, inputAttributes);
     }
 
@@ -226,10 +226,10 @@ public final class Settings implements SharedPreferences.OnSharedPreferenceChang
 
     public static int readKeyboardDefaultColor(final Context context) {
         final int[] keyboardThemeColors = context.getResources().getIntArray(R.array.keyboard_theme_colors);
-        final int[] keyboardThemeIds = context.getResources().getIntArray(R.array.keyboard_theme_ids);
+        final String[] keyboardThemeNames = context.getResources().getStringArray(R.array.keyboard_theme_names);
         final int themeId = KeyboardTheme.getKeyboardTheme(context).mThemeId;
-        for (int index = 0; index < keyboardThemeIds.length; index++) {
-            if (themeId == keyboardThemeIds[index]) {
+        for (int index = 0; index < keyboardThemeNames.length; index++) {
+            if (themeId == index) {
                 return keyboardThemeColors[index];
             }
         }

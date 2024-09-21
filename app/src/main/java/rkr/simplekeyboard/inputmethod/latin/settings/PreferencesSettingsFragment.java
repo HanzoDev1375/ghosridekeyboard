@@ -19,11 +19,9 @@ package rkr.simplekeyboard.inputmethod.latin.settings;
 import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
-import android.preference.CheckBoxPreference;
-import android.preference.Preference;
-import android.preference.SwitchPreference;
-
-import android.widget.Toast;
+import androidx.preference.CheckBoxPreference;
+import androidx.preference.Preference;
+import androidx.preference.SwitchPreferenceCompat;
 import rkr.simplekeyboard.inputmethod.R;
 import rkr.simplekeyboard.inputmethod.keyboard.KeyboardLayoutSet;
 
@@ -35,21 +33,22 @@ import rkr.simplekeyboard.inputmethod.keyboard.KeyboardLayoutSet;
  * keyboards - Space swipe cursor move - Delete swipe
  */
 public final class PreferencesSettingsFragment extends SubScreenFragment {
+
   @Override
-  public void onCreate(final Bundle icicle) {
-    super.onCreate(icicle);
-    addPreferencesFromResource(R.xml.prefs_screen_preferences);
+  public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
+    super.onCreatePreferences(savedInstanceState, rootKey);
+    setPreferencesFromResource(R.xml.prefs_screen_preferences, rootKey);
 
     if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.KITKAT) {
       removePreference(Settings.PREF_ENABLE_IME_SWITCH);
     } else {
       updateImeSwitchEnabledPref();
     }
-    
   }
 
   @Override
   public void onSharedPreferenceChanged(final SharedPreferences prefs, final String key) {
+    super.onSharedPreferenceChanged(prefs, key);// Added by EUP
     if (key.equals(Settings.PREF_HIDE_SPECIAL_CHARS) || key.equals(Settings.PREF_SHOW_NUMBER_ROW)) {
       KeyboardLayoutSet.onKeyboardThemeChanged();
     } else if (key.equals(Settings.PREF_HIDE_LANGUAGE_SWITCH_KEY)) {
@@ -71,8 +70,8 @@ public final class PreferencesSettingsFragment extends SubScreenFragment {
     // depending on the version of Android, the preferences could be different types
     if (hideLanguageSwitchKey instanceof CheckBoxPreference) {
       hideLanguageSwitchKeyIsChecked = ((CheckBoxPreference) hideLanguageSwitchKey).isChecked();
-    } else if (hideLanguageSwitchKey instanceof SwitchPreference) {
-      hideLanguageSwitchKeyIsChecked = ((SwitchPreference) hideLanguageSwitchKey).isChecked();
+    } else if (hideLanguageSwitchKey instanceof SwitchPreferenceCompat) {
+      hideLanguageSwitchKeyIsChecked = ((SwitchPreferenceCompat) hideLanguageSwitchKey).isChecked();
     } else {
       // in case it can be something else, don't bother doing anything
       return;

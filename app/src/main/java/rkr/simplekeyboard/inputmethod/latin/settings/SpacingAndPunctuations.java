@@ -17,14 +17,13 @@
 package rkr.simplekeyboard.inputmethod.latin.settings;
 
 import android.content.res.Resources;
-
 import java.util.Arrays;
 import java.util.Locale;
-
 import rkr.simplekeyboard.inputmethod.R;
 import rkr.simplekeyboard.inputmethod.latin.common.StringUtils;
 
 public final class SpacingAndPunctuations {
+    
     public final int[] mSortedWordSeparators;
     private final int mSentenceSeparator;
     private final int mAbbreviationMarker;

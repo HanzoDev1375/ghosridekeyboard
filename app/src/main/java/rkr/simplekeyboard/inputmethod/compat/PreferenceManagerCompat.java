@@ -18,19 +18,38 @@ package rkr.simplekeyboard.inputmethod.compat;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.os.Build;
-import android.preference.PreferenceManager;
+import androidx.core.content.ContextCompat;
+import androidx.preference.PreferenceManager;
 
 public class PreferenceManagerCompat {
-    public static Context getDeviceContext(Context context) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-            return context.createDeviceProtectedStorageContext();
-        }
 
-        return context;
-    }
+  /**
+   * Returns a new Context object for the current Context but whose storage APIs are backed by
+   * device-protected storage. Otherwise prior to API 24 the current Context is returned.
+   *
+   * <p>Each call to this method returns a new instance of a Context object; Context objects are not
+   * shared, however common state (ClassLoader, other Resources for the same configuration) may be
+   * so the Context itself can be fairly lightweight.
+   *
+   * <p>Prior to API 24 this method returns the current context, since device-protected storage is
+   * not available.
+   *
+   * @see Context#createDeviceProtectedStorageContext()
+   */
+  public static Context getDeviceContext(Context context) {
+    var dpc = ContextCompat.createDeviceProtectedStorageContext(context);
+    return (dpc == null) ? context : dpc;
+  }
 
-    public static SharedPreferences getDeviceSharedPreferences(Context context) {
-        return PreferenceManager.getDefaultSharedPreferences(getDeviceContext(context));
-    }
+  /**
+   * Gets a {@link SharedPreferences} instance that points to the default file that is used by the
+   * preference framework in the given context.
+   *
+   * @param context The context of the preferences whose values are wanted
+   * @return A {@link SharedPreferences} instance that can be used to retrieve and listen to values
+   *     of the preferences
+   */
+  public static SharedPreferences getDeviceSharedPreferences(Context context) {
+    return PreferenceManager.getDefaultSharedPreferences(getDeviceContext(context));
+  }
 }
