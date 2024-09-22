@@ -50,7 +50,6 @@ public final class PreferencesSettingsFragment extends SubScreenFragment {
 
   @Override
   public void onSharedPreferenceChanged(final SharedPreferences prefs, final String key) {
-
     if (key.equals(Settings.PREF_HIDE_SPECIAL_CHARS) || key.equals(Settings.PREF_SHOW_NUMBER_ROW)) {
       KeyboardLayoutSet.onKeyboardThemeChanged();
     } else if (key.equals(Settings.PREF_HIDE_LANGUAGE_SWITCH_KEY)) {

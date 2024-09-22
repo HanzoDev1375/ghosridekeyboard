@@ -16,6 +16,7 @@
 
 package rkr.simplekeyboard.inputmethod.latin;
 
+import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
@@ -34,8 +35,6 @@ import android.view.WindowManager;
 import android.view.inputmethod.InputMethodInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.view.inputmethod.InputMethodSubtype;
-import androidx.appcompat.app.AlertDialog;
-import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -638,13 +637,15 @@ public class RichInputMethodManager {
           }
         };
 
-    final AlertDialog dialog =
-        new MaterialAlertDialogBuilder(context)
-            .setTitle(title)
-            .setSingleChoiceItems(items, currentSubtypeIndex, listener)
-            .setNegativeButton(android.R.string.cancel, null)
-            .setCancelable(true)
-            .create();
+    final AlertDialog.Builder builder = new AlertDialog.Builder(context);
+    //                DialogUtils.getPlatformDialogThemeContext(context));
+    builder
+        .setSingleChoiceItems(items, currentSubtypeIndex, listener)
+        .setTitle(title)
+        .setNegativeButton(android.R.string.cancel, null);
+    final AlertDialog dialog = builder.create();
+    dialog.setCancelable(true);
+    dialog.setCanceledOnTouchOutside(true);
 
     final Window window = dialog.getWindow();
     final WindowManager.LayoutParams lp = window.getAttributes();
@@ -652,6 +653,7 @@ public class RichInputMethodManager {
     lp.type = WindowManager.LayoutParams.TYPE_APPLICATION_ATTACHED_DIALOG;
     window.setAttributes(lp);
     window.addFlags(WindowManager.LayoutParams.FLAG_ALT_FOCUSABLE_IM);
+
     dialog.show();
     return dialog;
   }

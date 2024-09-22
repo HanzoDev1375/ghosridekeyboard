@@ -40,7 +40,7 @@ import android.view.View;
 import android.view.ViewGroup.LayoutParams;
 import android.view.Window;
 import android.view.inputmethod.EditorInfo;
-import androidx.appcompat.app.AlertDialog;
+import android.app.AlertDialog;
 import java.io.FileDescriptor;
 import java.io.PrintWriter;
 import java.util.Locale;

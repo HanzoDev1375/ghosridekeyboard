@@ -7,46 +7,39 @@ import android.os.Build;
 import com.google.android.material.color.DynamicColors;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import rkr.simplekeyboard.inputmethod.logger.Logger;
-import android.app.AlarmManager;
-import android.app.PendingIntent;
 import android.content.Intent;
 import android.os.Process;
 
 public class AppLoader extends Application implements Thread.UncaughtExceptionHandler {
 
-  // For optimality maintain single Context & Apploader instance
+  // For optimality maintain single Apploader instance
   static AppLoader instance;
-  static Context applicationContext;
-  boolean isAtLeastAndroid12 = Build.VERSION.SDK_INT >= Build.VERSION_CODES.S;
-
+  static final long SCHEDULED_PROCESS_TERMINATION_TIME = 1500; //milliseconds
+  static final boolean isAtLeastAndroid12 = Build.VERSION.SDK_INT >= Build.VERSION_CODES.S;
+  
   @Override
   public void onCreate() {
     super.onCreate();
     instance = this;
-    applicationContext = this;
     Thread.setDefaultUncaughtExceptionHandler(this);
     
-    if (isAtLeastAndroid12) {
+    if (isAtLeastAndroid12 && DynamicColors.isDynamicColorAvailable()) {
       DynamicColors.applyToActivitiesIfAvailable(this);
     }
     //checkGhostIDEAvailibility();
   }
   
-   @Override
+  @Override
   public void uncaughtException(Thread thread, Throwable throwable) {
-    Intent intent =
-        new Intent(applicationContext, CrashActivity.class)
-            .setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
-            .putExtra("error", ThrowableUtils.getFullStackTrace(throwable));
-
-    PendingIntent pendingIntent =
-        PendingIntent.getActivity(applicationContext, 11111, intent, PendingIntent.FLAG_IMMUTABLE);
-
-    AlarmManager am = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
-    am.set(AlarmManager.ELAPSED_REALTIME_WAKEUP, 1000, pendingIntent);
-
-    Process.killProcess(Process.myPid());
-    System.exit(1);
+    try {
+      var intent = new Intent(this, CrashActivity.class);
+      intent.putExtra("error", ThrowableUtils.getFullStackTrace(throwable));
+      intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+      startActivity(intent);
+      scheduleProcessTermination();
+    } catch (Throwable th) {
+      th.printStackTrace();
+    }
   }
   
   void checkGhostIDEAvailibility() {
@@ -70,12 +63,30 @@ public class AppLoader extends Application implements Thread.UncaughtExceptionHa
           .show();
     }
   }
-
-  public static Context getContext() {
-    return applicationContext;
+  
+  public Context getContext() {
+    return instance.getApplicationContext();
   }
-
+  
   public static AppLoader getInstance() {
     return instance;
+  }
+  
+  /**
+   * Schedules process termination after a period of time.
+   * <p> Not ideal unless you need to handle crash data before termination
+   */
+  private void scheduleProcessTermination() {
+    new Thread(
+            () -> {
+              try {
+                Thread.sleep(SCHEDULED_PROCESS_TERMINATION_TIME);
+              } catch (InterruptedException ignore) {
+
+              }
+              Process.killProcess(Process.myPid());
+              System.exit(1);
+            })
+        .start();
   }
 }

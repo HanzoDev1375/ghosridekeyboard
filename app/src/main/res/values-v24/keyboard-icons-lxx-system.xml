@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <style name="KeyboardIcons.LXX_System">
+    <style name="KeyboardIcons.LXX_System" parent="AppTheme">
         <item name="iconShiftKey">@drawable/sym_keyboard_shift_lxx_system</item>
         <item name="iconDeleteKey">@drawable/sym_keyboard_delete_lxx_system</item>
         <item name="iconSettingsKey">@drawable/sym_keyboard_settings_lxx_system</item>

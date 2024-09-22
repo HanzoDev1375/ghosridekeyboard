@@ -37,7 +37,6 @@ public final class SettingsFragment extends InputMethodSettingsFragment {
   @Override
   public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
     super.onCreatePreferences(savedInstanceState, rootKey);
-    // setHasOptionsMenu(true);
     addPreferencesFromResource(R.xml.prefs);
 
     getPreferenceScreen()

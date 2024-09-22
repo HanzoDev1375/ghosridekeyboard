@@ -51,7 +51,6 @@
     <item name="colorSurfaceContainerHighest">@color/lightbrown_theme_surfaceContainerHighest</item>
     <!-- Custom -->
     <item name="switchPreferenceCompatStyle">@style/AppTheme.SwitchPreferenceCompat</item>
-    <item name="dialogCornerRadius">24dp</item>
   </style>
   <style
     name="platformSettingsTheme"
