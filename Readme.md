@@ -10,6 +10,7 @@ This is a commercial keyboard plugin for Ghost IDE, installed separately from th
 
 - Updated various components for improved user experience.
 
+- Fix failure to show crash activity on Android OS 12 and above 
 
 **Original Code**
 
