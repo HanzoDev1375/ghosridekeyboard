@@ -14,7 +14,7 @@
     android:allowBackup="true"
     android:fullBackupOnly="true"
     android:icon="@mipmap/ic_launcher"
-    android:label="@string/english_ime_name"
+    android:label="Gbost ide keyboard"
     android:theme="@style/AppTheme">
 
     <service

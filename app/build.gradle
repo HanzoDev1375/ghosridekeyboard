@@ -17,11 +17,28 @@ android {
         vectorDrawables { 
             useSupportLibrary true
         }
+	
+		
+		
     }
-
+    lintOptions {
+        checkReleaseBuilds false
+        abortOnError false
+    }
+	
+   signingConfigs {
+            release {
+                storeFile file("./HanzoDev.jks")
+                storePassword "HanzoDev"
+                keyAlias "HanzoDev"
+                keyPassword "HanzoDev"
+            }
+	}
     buildTypes {
         release {
-            minifyEnabled true
+		    signingConfig signingConfigs.release
+            minifyEnabled false
+            shrinkResources false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }

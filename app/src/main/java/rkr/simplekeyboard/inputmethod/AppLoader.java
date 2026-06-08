@@ -44,7 +44,7 @@ public class AppLoader extends Application implements Thread.UncaughtExceptionHa
   
   void checkGhostIDEAvailibility() {
     var isAvailable = false;
-    var pkgName = "com.myapp";
+    var pkgName = "ir.ninjacoder.ghostide";
 
     try {
       getPackageManager().getPackageInfo(pkgName, PackageManager.GET_ACTIVITIES);
